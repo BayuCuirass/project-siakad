@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\PengampuController;
+use App\Http\Controllers\MatkulController;
 
 Route::get('/plotting', [PengampuController::class, 'index']);
 Route::post('/plotting/simpan', [PengampuController::class, 'simpan']);
@@ -33,3 +34,7 @@ Route::delete('/mahasiswa/hapus/{id}', [MahasiswaController::class, 'hapus']);
 
 // DOSEN
 Route::get('/dosen', [DosenController::class, 'index']);
+
+Route::get('/matkul', [MatkulController::class, 'index']);
+Route::post('/matkul/simpan', [MatkulController::class, 'simpan']);
+Route::delete('/matkul/hapus/{id}', [MatkulController::class, 'hapus']);

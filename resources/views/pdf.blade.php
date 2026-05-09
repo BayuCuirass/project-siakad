@@ -36,9 +36,9 @@
                 <td>{{ $item->nim }}</td>
                 <td>{{ $item->nama }}</td>
                 <td>
-                    @if($item->id_prodi == '1') Sistem Informasi
-                    @elseif($item->id_prodi == '2') Teknik Informatika
-                    @elseif($item->id_prodi == '3') Teknik Komputer
+                    @if($item->prodi == '1') Sistem Informasi
+                    @elseif($item->prodi == '2') Teknik Informatika
+                    @elseif($item->prodi == '3') Teknik Komputer
                     @else Teknik Rekayasa Perangkat Lunak
                     @endif
                 </td>

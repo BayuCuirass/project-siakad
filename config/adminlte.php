@@ -335,8 +335,13 @@ return [
         ],
         [
             'text' => 'Pengampu',
-            'url'  => 'pengampu',
+            'url'  => 'plotting',
             'icon' => 'fas fa-fw fa-chalkboard-teacher',
+        ],
+        [
+            'text' => 'Mata Kuliah',
+            'url'  => 'matkul',
+            'icon' => 'fas fa-fw fa-book',
         ],
     ],
 

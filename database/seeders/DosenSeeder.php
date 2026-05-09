@@ -2,15 +2,21 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Dosen;
 
 class DosenSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
-    {
-        Dosen::create(['nidn' => '001', 'nama' => 'Budi', 'jabatan_akademik' => 'Lektor', 'status' => 'Aktif']);
-        Dosen::create(['nidn' => '002', 'nama' => 'Andi', 'jabatan_akademik' => 'Asisten Ahli', 'status' => 'Aktif']);
-        Dosen::create(['nidn' => '003', 'nama' => 'Siti', 'jabatan_akademik' => 'Lektor Kepala', 'status' => 'Aktif']);
-    }
+{
+    \App\Models\Dosen::insert([
+        ['nidn' => '00112233', 'nama_dosen' => 'Marta Ardiyanto, S.Kom, M.Kom', 'spesialisasi' => 'INTEGRASI APLIKASI KORPORASI '],
+        ['nidn' => '44556677', 'nama_dosen' => 'EKO PURWANTO, M.Kom., Ph.D', 'spesialisasi' => 'PERENCANAAN STRATEGI SI/TI'],
+        ['nidn' => '88990011', 'nama_dosen' => 'Togay', 'spesialisasi' => 'Programming'],
+        ['nidn' => '22334455', 'nama_dosen' => 'SUNDARI, SE., MM', 'spesialisasi' => 'Kewirausahaan'],
+    ]);
+}
 }

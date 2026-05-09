@@ -41,6 +41,7 @@
                     <th>NIM</th>
                     <th>Nama Mahasiswa</th>
                     <th>Prodi</th>
+                    <th>Dosen Wali</th>
                     <th>Status</th>
                     <th>Opsi</th>
                 </tr>
@@ -52,13 +53,15 @@
                     <td>{{ $item->nim }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>
-                        @if($item->id_prodi == '1') Sistem Informasi
-                        @elseif($item->id_prodi == '2') Teknik Informatika
-                        @elseif($item->id_prodi == '3') Teknik Komputer
-                        @elseif($item->id_prodi == '4') TRPL
-                        @else {{ $item->id_prodi }}
+                        @if($item->prodi == '1') Sistem Informasi
+                        @elseif($item->prodi == '2') Teknik Informatika
+                        @elseif($item->prodi == '3') Teknik Komputer
+                        @elseif($item->prodi == '4') TRPL
+                        @else {{ $item->prodi }}
                         @endif
                     </td>
+                    {{-- Tampilkan Nama Dosen Wali --}}
+                    <td>{{ $item->dosen->nama_dosen ?? 'Belum Ada Dosen' }}</td>
                     <td>
                         <span class="badge {{ $item->status_aktif == '1' ? 'badge-success' : 'badge-danger' }}">
                             {{ $item->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif' }}
@@ -79,19 +82,18 @@
                 </tr>
                 @endforeach
             </tbody>
-        <table>
+        </table>
     </div>
 </div>
 
-<!-- MODAL TAMBAH -->
 <div class="modal fade" id="modalTambah">
     <div class="modal-dialog">
         <form action="/mahasiswa/simpan" method="POST">
             @csrf
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">Tambah Data Mahasiswa</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -113,23 +115,32 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Dosen Wali</label>
+                        <select name="dosen_id" class="form-control">
+                            <option value="">-- Pilih Dosen Wali --</option>
+                            @foreach($dosens as $dosen)
+                                <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Status Mahasiswa</label>
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="statusSwitch" name="status_keaktifan" checked>
+                            <input type="hidden" name="status_keaktifan" value="0">
+                            <input type="checkbox" class="custom-control-input" id="statusSwitch" name="status_keaktifan" value="1" checked>
                             <label class="custom-control-label" for="statusSwitch">Aktif</label>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-<!-- MODAL EDIT -->
 <div class="modal fade" id="modalEdit">
     <div class="modal-dialog">
         <form id="formEdit">
@@ -137,7 +148,7 @@
             @method('PUT')
             <input type="hidden" id="edit_id">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning">
                     <h5 class="modal-title">Edit Data Mahasiswa</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -160,6 +171,15 @@
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Dosen Wali</label>
+                        <select id="edit_dosen_id" class="form-control">
+                            <option value="">-- Pilih Dosen Wali --</option>
+                            @foreach($dosens as $dosen)
+                                <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label>Status</label>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="edit_status">
@@ -168,8 +188,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Update</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning">Update</button>
                 </div>
             </div>
         </form>
@@ -194,7 +214,8 @@ $(document).ready(function() {
             $('#edit_id').val(data.id);
             $('#edit_nim').val(data.nim);
             $('#edit_nama').val(data.nama);
-            $('#edit_prodi').val(data.id_prodi);
+            $('#edit_prodi').val(data.prodi);
+            $('#edit_dosen_id').val(data.dosen_id); // Mengisi nilai Dosen Wali
             $('#edit_status').prop('checked', data.status_aktif == '1');
             $('#modalEdit').modal('show');
         });
@@ -211,6 +232,7 @@ $(document).ready(function() {
                 nim: $('#edit_nim').val(),
                 nama: $('#edit_nama').val(),
                 prodi: $('#edit_prodi').val(),
+                dosen_id: $('#edit_dosen_id').val(), // Mengirim update Dosen Wali
                 status_keaktifan: $('#edit_status').is(':checked') ? 1 : 0
             },
             success: function() {

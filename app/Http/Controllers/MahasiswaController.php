@@ -13,29 +13,29 @@ class MahasiswaController extends Controller
     public function tampil()
     {
         $mahasiswa = Mahasiswa::all();
-        return view('mahasiswa', compact('mahasiswa'));
+        // WAJIB: Ambil data dosen buat dropdown di form tambah
+        $dosens = Dosen::all(); 
+        
+        return view('mahasiswa', compact('mahasiswa', 'dosens'));
     }
 
     // SIMPAN DATA
     public function simpan(Request $request)
-    {
-        $request->validate([
-            'nim' => 'required|unique:mahasiswa,nim',
-            'nama' => 'required|string|max:255',
-            'prodi' => 'required|string|max:100',
-        ]);
+{
+    $status = $request->has('status_keaktifan') ? '1' : '0';
 
-        Mahasiswa::create([
-            'nim' => $request->nim,
-            'nama' => $request->nama,
-            'id_prodi' => $request->prodi,
-            'status_aktif' => $request->has('status_keaktifan') ? '1' : '0'
-        ]);
+    Mahasiswa::create([
+        'nim' => $request->nim,
+        'nama' => $request->nama,
+        'prodi' => $request->prodi,    // <-- Pastikan tujuannya 'prodi'
+        'status_aktif' => $status,
+        'dosen_id' => $request->dosen_id,
+    ]);
 
-        return redirect()->back()->with('success', 'Data mahasiswa berhasil ditambahkan');
-    }
+    return redirect('/mahasiswa')->with('success', 'Data Berhasil Ditambah!');
+}
 
-    // AMBIL DATA EDIT
+    // AMBIL DATA EDIT (AJAX)
     public function show($id)
     {
         return response()->json(Mahasiswa::findOrFail($id));
@@ -43,17 +43,20 @@ class MahasiswaController extends Controller
 
     // UPDATE DATA
     public function update(Request $request, $id)
-    {
-        $mhs = Mahasiswa::findOrFail($id);
-        $mhs->update([
-            'nim' => $request->nim,
-            'nama' => $request->nama,
-            'id_prodi' => $request->prodi,
-            'status_aktif' => $request->status_keaktifan ? '1' : '0',
-        ]);
+{
+    $mhs = Mahasiswa::findOrFail($id);
+    $status = $request->status_keaktifan == '1' ? '1' : '0';
 
-        return response()->json(['success' => true]);
-    }
+    $mhs->update([
+        'nim' => $request->nim,
+        'nama' => $request->nama,
+        'prodi' => $request->prodi,    // <-- Pastikan tujuannya 'prodi'
+        'dosen_id' => $request->dosen_id,
+        'status_aktif' => $status,
+    ]);
+
+    return response()->json(['success' => true]);
+}
 
     // HAPUS DATA
     public function hapus($id)
@@ -72,7 +75,7 @@ class MahasiswaController extends Controller
         return $pdf->download('laporan_mahasiswa.pdf');
     }
 
-    // EXPORT CSV (LANGSUNG DOWNLOAD)
+    // EXPORT CSV
     public function csv()
     {
         $fileName = 'laporan_mahasiswa.csv';
@@ -88,19 +91,21 @@ class MahasiswaController extends Controller
 
         $callback = function() use ($mahasiswa) {
             $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['NIM', 'Nama', 'Program Studi', 'Status']);
+            fputcsv($handle, ['NIM', 'Nama', 'Program Studi', 'Dosen Wali', 'Status']);
 
             foreach ($mahasiswa as $mhs) {
                 $prodi = '';
-                if ($mhs->id_prodi == '1') $prodi = 'Sistem Informasi';
-                elseif ($mhs->id_prodi == '2') $prodi = 'Teknik Informatika';
-                elseif ($mhs->id_prodi == '3') $prodi = 'Teknik Komputer';
-                else $prodi = $mhs->id_prodi;
+                if ($mhs->prodi == '1') $prodi = 'Sistem Informasi';
+                elseif ($mhs->prodi == '2') $prodi = 'Teknik Informatika';
+                elseif ($mhs->prodi == '3') $prodi = 'Teknik Komputer';
+                elseif ($mhs->prodi == '4') $prodi = 'TRPL';
+                else $prodi = $mhs->prodi;
 
                 fputcsv($handle, [
                     $mhs->nim,
                     $mhs->nama,
                     $prodi,
+                    $mhs->dosen->nama_dosen ?? '-',
                     $mhs->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif'
                 ]);
             }
@@ -110,7 +115,7 @@ class MahasiswaController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
-    // EXPORT EXCEL (SEDERHANA - LANGSUNG JADI)
+    // EXPORT EXCEL SEDERHANA
     public function excel()
     {
         $fileName = 'laporan_mahasiswa.xls';
@@ -125,15 +130,20 @@ class MahasiswaController extends Controller
         ];
 
         $callback = function() use ($mahasiswa) {
-            echo "NIM\tNama\tProgram Studi\tStatus\n";
+            echo "NIM\tNama\tProgram Studi\tDosen Wali\tStatus\n";
             foreach ($mahasiswa as $mhs) {
                 $prodi = '';
-                if ($mhs->id_prodi == '1') $prodi = 'Sistem Informasi';
-                elseif ($mhs->id_prodi == '2') $prodi = 'Teknik Informatika';
-                elseif ($mhs->id_prodi == '3') $prodi = 'Teknik Komputer';
-                else $prodi = $mhs->id_prodi;
+                if ($mhs->prodi == '1') $prodi = 'Sistem Informasi';
+                elseif ($mhs->prodi == '2') $prodi = 'Teknik Informatika';
+                elseif ($mhs->prodi == '3') $prodi = 'Teknik Komputer';
+                elseif ($mhs->prodi == '4') $prodi = 'TRPL';
+                else $prodi = $mhs->prodi;
 
-                echo $mhs->nim . "\t" . $mhs->nama . "\t" . $prodi . "\t" . ($mhs->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif') . "\n";
+                echo $mhs->nim . "\t" . 
+                     $mhs->nama . "\t" . 
+                     $prodi . "\t" . 
+                     ($mhs->dosen->nama_dosen ?? '-') . "\t" . 
+                     ($mhs->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif') . "\n";
             }
         };
 
