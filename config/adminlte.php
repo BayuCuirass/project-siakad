@@ -333,6 +333,11 @@ return [
             'url'  => 'dosen',
             'icon' => 'fas fa-fw fa-chalkboard-teacher',
         ],
+        [
+            'text' => 'Pengampu',
+            'url'  => 'pengampu',
+            'icon' => 'fas fa-fw fa-chalkboard-teacher',
+        ],
     ],
 
     /*
