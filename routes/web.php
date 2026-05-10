@@ -41,4 +41,6 @@ Route::get('/dosen', [DosenController::class, 'index']);
 
 Route::get('/matkul', [MatkulController::class, 'index']);
 Route::post('/matkul/simpan', [MatkulController::class, 'simpan']);
+Route::get('/matkul/{id}', [MatkulController::class, 'show'])->whereNumber('id');
+Route::put('/matkul/{id}', [MatkulController::class, 'update'])->whereNumber('id');
 Route::delete('/matkul/hapus/{id}', [MatkulController::class, 'hapus']);

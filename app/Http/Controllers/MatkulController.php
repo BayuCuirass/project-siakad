@@ -33,7 +33,14 @@ class MatkulController extends Controller
     public function update(Request $request, $id)
     {
         $mk = Matkul::findOrFail($id);
-        $mk->update($request->all());
+
+        $request->validate([
+            'kode_matkul' => 'required|unique:matkuls,kode_matkul,' . $mk->id,
+            'nama_matkul' => 'required',
+            'sks' => 'required|numeric'
+        ]);
+
+        $mk->update($request->only(['kode_matkul', 'nama_matkul', 'sks']));
         return response()->json(['success' => true]);
     }
 

@@ -77,10 +77,91 @@
         </form>
     </div>
 </div>
+
+<div class="modal fade" id="modalEditMk">
+    <div class="modal-dialog">
+        <form id="formEditMk">
+            @csrf
+            <input type="hidden" id="edit_mk_id">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">Edit Mata Kuliah</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Kode Matkul</label>
+                        <input type="text" id="edit_kode_matkul" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Matkul</label>
+                        <input type="text" id="edit_nama_matkul" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>SKS</label>
+                        <input type="number" id="edit_sks" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-warning">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
 
 @section('js')
 <script>
-    $('#tableMk').DataTable();
+    $(function() {
+        $('#tableMk').DataTable();
+
+        function showEditModal(id) {
+            $.get('/matkul/' + id, function(data) {
+                $('#edit_mk_id').val(data.id);
+                $('#edit_kode_matkul').val(data.kode_matkul);
+                $('#edit_nama_matkul').val(data.nama_matkul);
+                $('#edit_sks').val(data.sks);
+                $('#modalEditMk').modal('show');
+            }).fail(function() {
+                alert('Gagal mengambil data mata kuliah.');
+            });
+        }
+
+        $('.btn-edit-mk').on('click', function() {
+            const id = $(this).data('id');
+            showEditModal(id);
+        });
+
+        $('#formEditMk').on('submit', function(e) {
+            e.preventDefault();
+            const id = $('#edit_mk_id').val();
+            const token = $('input[name="_token"]', this).val();
+
+            $.ajax({
+                url: '/matkul/' + id,
+                type: 'PUT',
+                data: {
+                    _token: token,
+                    kode_matkul: $('#edit_kode_matkul').val(),
+                    nama_matkul: $('#edit_nama_matkul').val(),
+                    sks: $('#edit_sks').val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert('Gagal memperbarui data mata kuliah.');
+                    }
+                },
+                error: function(xhr) {
+                    let message = 'Terjadi kesalahan saat memperbarui data.';
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        message = Object.values(xhr.responseJSON.errors).join('\n');
+                    }
+                    alert(message);
+                }
+            });
+        });
+    });
 </script>
 @endsection
