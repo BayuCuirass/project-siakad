@@ -3,8 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\DosenController;
-use App\Http\Controllers\PengampuController;
 use App\Http\Controllers\MatkulController;
+use App\Http\Controllers\PengampuController;
+
+Route::get('/plotting', [PengampuController::class, 'index']);
+Route::post('/plotting/simpan', [PengampuController::class, 'simpan']);
+Route::post('/plotting/hapus/{id}', [PengampuController::class, 'hapus']);
 
 Route::get('/plotting', [PengampuController::class, 'index']);
 Route::post('/plotting/simpan', [PengampuController::class, 'simpan']);

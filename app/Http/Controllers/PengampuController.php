@@ -26,15 +26,14 @@ class PengampuController extends Controller
             'kelas' => $request->kelas,
         ]);
 
-        return redirect('/plotting');
+        return redirect('/plotting')->with('success', 'Data Plotting berhasil ditambahkan!');
     }
 
-    // Tambahan fitur hapus
     public function hapus($id)
     {
         $pengampu = Pengampu::findOrFail($id);
         $pengampu->delete();
 
-        return redirect('/plotting');
+        return redirect('/plotting')->with('success', 'Data Plotting berhasil dihapus!');
     }
 }

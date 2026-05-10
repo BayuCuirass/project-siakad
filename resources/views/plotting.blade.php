@@ -7,6 +7,13 @@
 @endsection
 
 @section('content')
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <i class="fas fa-check-circle"></i> {{ session('success') }}
+    </div>
+@endif
+
 <div class="card">
     <div class="card-header">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalTambah">
@@ -17,20 +24,19 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>No</th>
+                    <th width="5%">No</th>
                     <th>Mata Kuliah</th>
                     <th>Dosen Pengampu</th>
                     <th>Kelas</th>
-                    <th>Aksi</th>
+                    <th width="15%">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($pengampus as $key => $item)
                 <tr>
                     <td>{{ $key + 1 }}</td>
-                    {{-- Mengambil nama matkul dan nama dosen dari relasi database --}}
-                    <td>{{ $item->matkul->nama_matkul ?? 'Matkul Dihapus' }}</td>
-                    <td>{{ $item->dosen->nama_dosen ?? 'Dosen Dihapus' }}</td>
+                    <td>{{ $item->matkul->nama_matkul ?? 'Data Dihapus' }}</td>
+                    <td>{{ $item->dosen->nama_dosen ?? 'Data Dihapus' }}</td>
                     <td>{{ $item->kelas }}</td>
                     <td>
                         <form action="/plotting/hapus/{{ $item->id }}" method="POST" class="d-inline">
@@ -52,7 +58,9 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <h5 class="modal-title" style="color: white;">Tambah Plotting Dosen</h5>
-                <button type="button" class="close" data-dismiss="modal" style="color: white;">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <form action="/plotting/simpan" method="POST">
                 @csrf

@@ -10,14 +10,14 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::table('mahasiswa', function (Blueprint $table) {
-        // Menambahkan kolom dosen_id (Foreign Key) setelah kolom prodi
-        // Kita pakai bigInteger karena tabel dosens pakai bigint
-        // Kita kasih nullable() karena mungkin ada mahasiswa baru yang belum dapet dosen wali
-        $table->bigInteger('dosen_id')->nullable()->after('prodi');
-    });
-}
+    {
+        Schema::table('mahasiswa', function (Blueprint $table) {
+            // Cek dulu apakah kolom dosen_id sudah ada
+            if (!Schema::hasColumn('mahasiswa', 'dosen_id')) {
+                $table->bigInteger('dosen_id')->nullable()->after('prodi');
+            }
+        });
+    }
 
     /**
      * Reverse the migrations.
@@ -25,7 +25,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('mahasiswa', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('mahasiswa', 'dosen_id')) {
+                $table->dropColumn('dosen_id');
+            }
         });
     }
 };

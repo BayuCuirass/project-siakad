@@ -6,16 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Pengampu extends Model
 {
-    // Kasih tau Laravel nama tabelnya (opsional kalau namanya udah pas, tapi buat jaga-jaga)
-    protected $table = 'pengampus';
-    
-    protected $fillable = ['dosen_id', 'matkul_id', 'kelas'];
+    protected $table = 'pengampus'; 
 
-    public function dosen() {
-        return $this->belongsTo(Dosen::class);
+    // WAJIB ADA: Izin biar form web bisa nyimpen ke database
+    protected $fillable = [
+        'dosen_id',
+        'matkul_id',
+        'kelas'
+    ];
+
+    // Relasi ke Dosen
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_id');
     }
 
-    public function matkul() {
-        return $this->belongsTo(Matkul::class);
+    // Relasi ke Matkul
+    public function matkul()
+    {
+        return $this->belongsTo(Matkul::class, 'matkul_id');
     }
 }
