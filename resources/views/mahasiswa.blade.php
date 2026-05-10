@@ -61,7 +61,7 @@
                         @endif
                     </td>
                     {{-- Tampilkan Nama Dosen Wali --}}
-                    <td>{{ $item->dosen->nama_dosen ?? 'Belum Ada Dosen' }}</td>
+                    <td>{{ $item->dosen->nama ?? 'Belum Ada Dosen' }}</td>
                     <td>
                         <span class="badge {{ $item->status_aktif == '1' ? 'badge-success' : 'badge-danger' }}">
                             {{ $item->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif' }}
@@ -119,7 +119,7 @@
                         <select name="dosen_id" class="form-control">
                             <option value="">-- Pilih Dosen Wali --</option>
                             @foreach($dosens as $dosen)
-                                <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
+                                <option value="{{ $dosen->nip }}">{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -175,7 +175,7 @@
                         <select id="edit_dosen_id" class="form-control">
                             <option value="">-- Pilih Dosen Wali --</option>
                             @foreach($dosens as $dosen)
-                                <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
+                                <option value="{{ $dosen->nip }}">{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
                     </div>

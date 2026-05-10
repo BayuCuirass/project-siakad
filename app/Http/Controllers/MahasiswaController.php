@@ -14,7 +14,7 @@ class MahasiswaController extends Controller
     {
         $mahasiswa = Mahasiswa::all();
         // WAJIB: Ambil data dosen buat dropdown di form tambah
-        $dosens = Dosen::all(); 
+        $dosens = Dosen::dosen()->get(); 
         
         return view('mahasiswa', compact('mahasiswa', 'dosens'));
     }
@@ -105,7 +105,7 @@ class MahasiswaController extends Controller
                     $mhs->nim,
                     $mhs->nama,
                     $prodi,
-                    $mhs->dosen->nama_dosen ?? '-',
+                    $mhs->dosen->nama ?? '-',
                     $mhs->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif'
                 ]);
             }
@@ -142,7 +142,7 @@ class MahasiswaController extends Controller
                 echo $mhs->nim . "\t" . 
                      $mhs->nama . "\t" . 
                      $prodi . "\t" . 
-                     ($mhs->dosen->nama_dosen ?? '-') . "\t" . 
+                     ($mhs->dosen->nama ?? '-') . "\t" . 
                      ($mhs->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif') . "\n";
             }
         };

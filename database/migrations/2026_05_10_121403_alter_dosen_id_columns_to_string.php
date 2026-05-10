@@ -12,22 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('mahasiswa', function (Blueprint $table) {
-            // Cek dulu apakah kolom dosen_id sudah ada
-            if (!Schema::hasColumn('mahasiswa', 'dosen_id')) {
-                $table->string('dosen_id')->nullable()->after('prodi');
-            }
+            $table->string('dosen_id')->nullable()->change();
+        });
+
+        Schema::table('pengampus', function (Blueprint $table) {
+            $table->string('dosen_id')->change();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('mahasiswa', function (Blueprint $table) {
-            if (Schema::hasColumn('mahasiswa', 'dosen_id')) {
-                $table->dropColumn('dosen_id');
-            }
+            $table->bigInteger('dosen_id')->nullable()->change();
+        });
+
+        Schema::table('pengampus', function (Blueprint $table) {
+            $table->bigInteger('dosen_id')->change();
         });
     }
 };

@@ -16,7 +16,7 @@ return new class extends Migration
         $table->string('status_aktif')->default('on'); // Sesuaikan dengan milikmu
         
         // --- TAMBAHKAN BARIS INI ---
-        $table->bigInteger('dosen_id')->nullable(); 
+        $table->string('dosen_id')->nullable(); 
         
         $table->timestamps();
     });

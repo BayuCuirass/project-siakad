@@ -36,7 +36,7 @@
                 <tr>
                     <td>{{ $key + 1 }}</td>
                     <td>{{ $item->matkul->nama_matkul ?? 'Data Dihapus' }}</td>
-                    <td>{{ $item->dosen->nama_dosen ?? 'Data Dihapus' }}</td>
+                    <td>{{ $item->dosen->nama ?? 'Data Dihapus' }}</td>
                     <td>{{ $item->kelas }}</td>
                     <td>
                         <form action="/plotting/hapus/{{ $item->id }}" method="POST" class="d-inline">
@@ -79,7 +79,7 @@
                         <select name="dosen_id" class="form-control" required>
                             <option value="">-- Pilih Dosen --</option>
                             @foreach($dosens as $dosen)
-                                <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
+                                <option value="{{ $dosen->nip }}">{{ $dosen->nama }}</option>
                             @endforeach
                         </select>
                     </div>

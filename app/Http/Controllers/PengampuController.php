@@ -12,7 +12,7 @@ class PengampuController extends Controller
     public function index()
     {
         $pengampus = Pengampu::with(['dosen', 'matkul'])->get();
-        $dosens = Dosen::all();
+        $dosens = Dosen::dosen()->get();
         $matkuls = Matkul::all();
 
         return view('plotting', compact('pengampus', 'dosens', 'matkuls'));

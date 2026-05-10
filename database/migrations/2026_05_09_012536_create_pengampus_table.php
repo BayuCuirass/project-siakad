@@ -13,7 +13,7 @@ return new class extends Migration
 {
     Schema::create('pengampus', function (Blueprint $table) {
         $table->id();
-        $table->bigInteger('dosen_id');
+        $table->string('dosen_id');
         $table->bigInteger('matkul_id');
         $table->string('kelas');
         $table->timestamps();

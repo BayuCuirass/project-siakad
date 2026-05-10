@@ -18,7 +18,7 @@ class Pengampu extends Model
     // Relasi ke Dosen
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class, 'dosen_id');
+        return $this->belongsTo(Dosen::class, 'dosen_id', 'nip');
     }
 
     // Relasi ke Matkul

@@ -28,7 +28,7 @@
                 @else {{ $item->prodi }}
                 @endif
             </td>
-            <td>{{ $item->dosen->nama_dosen ?? '-' }}</td>
+            <td>{{ $item->dosen->nama ?? '-' }}</td>
             <td style="text-align: center; color: {{ $item->status_aktif == '1' ? '#28a745' : '#dc3545' }};">
                 {{ $item->status_aktif == '1' ? 'Aktif' : 'Tidak Aktif' }}
             </td>

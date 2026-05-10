@@ -21,6 +21,6 @@ class Mahasiswa extends Model
     // "Setiap Mahasiswa memiliki satu Dosen Wali"
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class, 'dosen_id');
+        return $this->belongsTo(Dosen::class, 'dosen_id', 'nip');
     }
 }
